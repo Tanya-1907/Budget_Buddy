@@ -1,0 +1,14 @@
+### Get all transactions
+GET http://localhost:5000/api/transactions
+
+### Create a transaction
+POST http://localhost:5000/api/transactions
+Content-Type: application/json
+
+{
+  "description": "Lunch",
+  "category": "Food",
+  "date": "2026-09-29",
+  "type": "Expense",
+  "amount": 250
+}

@@ -1,0 +1,72 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  description String
+  category    String
+  date        DateTime
+  type        String
+  amount      Decimal  @db.Decimal(12, 2)
+  createdAt   DateTime @default(now())
+
+  userId      Int?
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model Budget {
+  id        Int      @id @default(autoincrement())
+  category  String
+  amount    Decimal  @db.Decimal(12, 2)
+  month     String
+  createdAt DateTime @default(now())
+
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model RecurringExpense {
+  id          Int      @id @default(autoincrement())
+  description String
+  category    String
+  amount      Decimal  @db.Decimal(12, 2)
+  frequency   String
+  nextDueDate DateTime
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  userId      Int?
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model Goal {
+  id          Int      @id @default(autoincrement())
+  name        String
+  target      Decimal  @db.Decimal(12, 2)
+  saved       Decimal  @db.Decimal(12, 2)
+  deadline    DateTime
+  createdAt   DateTime @default(now())
+
+  userId      Int?
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  transactions      Transaction[]
+  budgets            Budget[]
+  recurringExpenses RecurringExpense[]
+  goals             Goal[]
+}
